@@ -9,20 +9,22 @@ import { Header } from '@rneui/themed';
 const StyledView = styled(View);
 const StyledText = styled(Text);
 
+ let hardcodedTextColor = "text-[#f00000]";
+
 export default function HomeScreen() {
   return (
     <>
-    <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 30 } }} backgroundColor='#93c47d'>
+    <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 35, fontSize: 25 } }} backgroundColor='#93c47d'>
     </Header>
     <StyledView className='flex justify-center'>
-      <StyledText className=''></StyledText>
+      <ThemedText>Hello</ThemedText>
     </StyledView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  titleContainer: { 
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
@@ -38,4 +40,5 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+
 });
