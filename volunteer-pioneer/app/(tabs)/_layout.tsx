@@ -32,6 +32,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="explore1"
+        options={{
+          title: 'Explore',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'alert-circle-sharp' : 'alert-circle-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
