@@ -1,3 +1,4 @@
+import Entypo from '@expo/vector-icons/Entypo'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { StyleSheet, Image, Platform } from 'react-native';
 

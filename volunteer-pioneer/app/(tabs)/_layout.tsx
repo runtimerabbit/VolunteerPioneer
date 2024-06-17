@@ -1,6 +1,7 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
 
+import  MaterialCommunityIcons  from '@expo/vector-icons/MaterialCommunityIcons';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -24,20 +25,20 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="search"
         options={{
-          title: 'Explore',
+          title: 'Search',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <TabBarIcon name={focused ? 'search-sharp' : 'search-outline'} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="explore1"
+        name="account"
         options={{
-          title: 'Explore',
+          title: 'Account',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'alert-circle-sharp' : 'alert-circle-outline'} color={color} />
+            <MaterialCommunityIcons name={focused ? 'account' : 'account-outline' } size={32} color={color}></MaterialCommunityIcons>
           ),
         }}
       />

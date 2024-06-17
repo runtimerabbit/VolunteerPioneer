@@ -1,6 +1,14 @@
 {
   "expo": {
     "name": "volunteer-pioneer",
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow Volunteer Pioneer to use your location?"
+        }
+      ]
+    ],
     "slug": "volunteer-pioneer",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,9 +21,19 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.company",
+            "config": {
+                "googleMapsApiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
+            }
     },
     "android": {
+      "package": "com.company",
+      "config": {
+                "googleMaps": {
+                    "apiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
+                }
+            },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -26,11 +44,9 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router"
-    ],
+
     "experiments": {
       "typedRoutes": true
     }
-  }
+ }
 }
