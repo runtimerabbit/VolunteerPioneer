@@ -16,4 +16,4 @@ A mobile app that displays current volunteer events in your area. Volunteer orga
 - Map of current events
 - Live previews
 - Android and iOS
-
+- Natural Language Query
