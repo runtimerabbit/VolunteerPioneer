@@ -1,0 +1,7 @@
+1. Auth = DONE
+2. Post event = post
+3. Takedown event = delete
+4. Read event = get
+5. Edit/update event = put
+6. find events = get
+
