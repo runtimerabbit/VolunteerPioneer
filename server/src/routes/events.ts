@@ -4,7 +4,7 @@ import type { Response, Request } from "express"
 function eventRouter() {
     const router: Router = Router();
     router.post("/", async (req: Request, res: Response) => {
-
+        
     });
     router.get("/:id", async (req: Request, res: Response) => {
         res.send(req.params.id);

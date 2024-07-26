@@ -1,0 +1,21 @@
+{
+  "event": {
+    "id": "uuid",
+    "title": "text",
+    "description": "text",
+    "date": "date",
+    "creator": ["uuid", "foreign key"]
+  },
+  "participants": {
+    "id": "serial",
+    "eventId": ["uuid", "foreign key"],
+    "userid": ["uuid", "foreign key"]
+  },
+  "accounts": {
+    "username": "text",
+    "accountType": ["enum": [ "CREATOR", "USER" ]]
+    "id": ["uuid", "foreign key"]
+  }
+  
+}
+
