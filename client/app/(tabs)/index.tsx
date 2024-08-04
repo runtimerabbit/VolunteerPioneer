@@ -7,6 +7,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Header } from '@rneui/themed';
 
 import * as Location from 'expo-location'
+import { getNavigationConfig } from 'expo-router/build/getLinkingConfig';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
