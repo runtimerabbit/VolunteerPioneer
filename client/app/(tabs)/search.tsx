@@ -14,6 +14,7 @@ export default function TabTwoScreen() {
     placeholder='Food banks near me'
     onChangeText={(userInput) => {setUserInput(userInput)}}
     value={userInput}
+    round={true}
     >
     </SearchBar>
     </>

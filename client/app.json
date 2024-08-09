@@ -7,6 +7,12 @@
         {
           "locationAlwaysAndWhenInUsePermission": "Allow Volunteer Pioneer to use your location?"
         }
+      ],
+      [
+        "expo-font",
+        {
+        "fonts": ["node_modules/@expo-google-fonts/m-plus-rounded-1c/MPLUSRounded1c_700Bold.TTF"]
+        }
       ]
     ],
     "slug": "volunteer-pioneer",
@@ -23,17 +29,17 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.company",
-            "config": {
-                "googleMapsApiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
-            }
+      "config": {
+        "googleMapsApiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
+      }
     },
     "android": {
       "package": "com.company",
       "config": {
-                "googleMaps": {
-                    "apiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
-                }
-            },
+        "googleMaps": {
+          "apiKey": "AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -44,9 +50,8 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-
     "experiments": {
       "typedRoutes": true
     }
- }
+  }
 }
