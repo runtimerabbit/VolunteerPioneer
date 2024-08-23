@@ -6,7 +6,7 @@ import { getUser, createUser } from "../controllers/user"
 function userRouter() {
     const router: Router = Router()
     router.post("/", async (req: Request, res: Response) => {
-        const {name, profilePicture} : Record <string, string> = req.body;
+        const {name, profilePicture, role} : Record <string, string> = req.body;
         const token = req.get("x-access-token");
         if (!token){
             return res.status(401).send({error: "Unauthorized", status:401})
@@ -15,7 +15,7 @@ function userRouter() {
         if (!user) {
                return res.status(401).send({error: "Unauthorized", status:401})
         }
-        let createdUser = await createUser(name, profilePicture, user.id)
+        let createdUser = await createUser(name, profilePicture, user.id, role)
         return res.status(createdUser.status).send(createdUser)
     });
     router.get("/", async (req: Request, res: Response) => {

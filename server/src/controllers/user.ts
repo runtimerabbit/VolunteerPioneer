@@ -1,7 +1,7 @@
 import { error } from "console";
 import { supabase } from "../util/supabase";
 
-const createUser = async (username: string, profilePicture: string, userId: string) => {
+const createUser = async (username: string, profilePicture: string, userId: string, role: string) => {
     const { data: profileData } = await supabase.from("users").select().eq("id", userId);
     if (profileData.length > 0){
         return {status: 409, error: "User already exists"}
@@ -15,6 +15,7 @@ const createUser = async (username: string, profilePicture: string, userId: stri
     {
         id: userId,
         username,
+        role: role,
         profile_picture: pictureData.publicUrl
     }
     ]).select().single();

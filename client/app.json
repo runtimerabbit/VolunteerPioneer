@@ -11,7 +11,7 @@
       [
         "expo-font",
         {
-        "fonts": ["node_modules/@expo-google-fonts/m-plus-rounded-1c/MPLUSRounded1c_700Bold.TTF"]
+        "fonts": ["node_modules/@expo-google-fonts/m-plus-rounded-1c/MPLUSRounded1c_700Bold.ttf"]
         }
       ]
     ],

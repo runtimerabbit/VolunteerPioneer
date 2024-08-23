@@ -44,11 +44,11 @@ export default function HomeScreen() {
     <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 35, fontSize: 25 } }} backgroundColor='#93c47d'>
     </Header>
     <StyledView style={styles.container} className='flex justify-center'>
-      <MapView initialRegion={{
+      <MapView region={{
         latitude: location?.coords.latitude as number,
         longitude: location?.coords.longitude as number,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01
       }} 
       // followsUserLocation={true}
       showsUserLocation={true}
