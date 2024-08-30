@@ -11,6 +11,7 @@ function authRouter() {
         return res.status(auth.status).send(auth)
     })
     router.post("/login", async (req: Request, res: Response) => {
+        console.log("login route touched")
         const {email, password}: {email: string, password: string} = req.body
         const auth = await login(email, password)
         return res.status(auth.status).send(auth)

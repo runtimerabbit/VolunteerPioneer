@@ -8,7 +8,7 @@ async function signup(email: string, password: string, username: string, account
             error: error.message
         }
     }
-    const {data: userData, error: userError} = await supabase.from("accounts").insert([{username, accountType}]).select();
+    const {data: userData, error: userError} = await supabase.from("users").insert([{username, role: accountType}]).select();
     if (userError) {
         return {
             status: 500,
@@ -28,7 +28,13 @@ async function signup(email: string, password: string, username: string, account
 }
 
 async function login(email: string, password: string) {
-    const {data, error} = await supabase.auth.signInWithPassword ({email, password})
+    console.log("login controller touched")
+    console.log(email, password)
+    const {data, error} = await supabase.auth.signInWithPassword ({
+        email: email, 
+        password: password
+    });
+    // console.info(data, error)
     if (error) {
         return {
             status: 500,

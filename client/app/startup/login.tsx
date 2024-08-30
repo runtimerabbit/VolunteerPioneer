@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
 import { useState } from "react"
-import { Pressable, StyleSheet, TextInput, Text } from "react-native"
+import { Pressable, StyleSheet, TextInput, Text, View } from "react-native"
 import axios from "axios"
 import { router } from "expo-router"
 import AsyncStorage from "@react-native-async-storage/async-storage"
@@ -10,17 +10,19 @@ export default function Login(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [error1, setError1] = useState("");
     async function processLogin(){
-        const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+        const apiUrl = process.env.EXPO_PUBLIC_API_URL
+        console.info(apiUrl) 
+        console.info(email, password)
         if (!email){
             setError("You haven't entered an email")
-            return
         }
-        if (!password) {
-            setError("You haven't entered an password")
-            return
+        if (!password){
+            setError1("You haven't entered a password")
+            
         }
-        const auth = await axios.post(`${apiUrl}/auth/login`, {email, password})
+        const auth = await axios.post(apiUrl+'/auth/login', {email, password})
         if (auth.status === 500){
             setError("Not able to login")
             return
@@ -35,6 +37,7 @@ export default function Login(){
             }
         }
         router.navigate("/(tabs)/")
+    }
     return (
         <ThemedView style={styles.container}>
             <ThemedText style={styles.titleText}>Login</ThemedText>
@@ -61,14 +64,17 @@ export default function Login(){
             autoCapitalize="none"
             >
             </TextInput>
-            <ThemedText>{error}</ThemedText>
-            <Pressable>
-                <Text></Text>
-            </Pressable>
+            <ThemedText style={styles.errorText}>{error}</ThemedText>
+            <ThemedText style={styles.errorText}>{error1}</ThemedText>
+            <View style={styles.view}>
+                <Pressable style={styles.button} onPress={() => processLogin()}>
+                    <Text style={styles.buttonText}>Login</Text>
+                </Pressable>
+            </View>
         </ThemedView>
         )
     }
-}
+
 
 const styles = StyleSheet.create({
     container: {
@@ -79,6 +85,29 @@ const styles = StyleSheet.create({
         marginVertical: 45,
         fontSize: 26,
         fontWeight: "bold"
+    },
+    view: {
+        alignItems: "center",
+        marginTop: 40,
+        marginBottom: -40
+    },
+    button: {
+        justifyContent: 'center',
+        marginTop: 10,
+        marginBottom: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 38,
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: '#93c47d',
+    },
+    buttonText: {
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+        alignItems: "center"
     },
     input: {
         height: 40,
@@ -91,5 +120,8 @@ const styles = StyleSheet.create({
     text: {
         paddingHorizontal: 10,
         fontWeight: "bold"
+    },
+    errorText: {
+        color: "#F96859"
     }
 })
