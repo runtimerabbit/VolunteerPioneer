@@ -14,16 +14,17 @@ export default function Signup() {
     const [error, setError] = useState("");
     const [error1, setError1] = useState("");
     const [error2, setError2] = useState("");
+    const [error3, setError3] = useState("");
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
     const [items, setItems] = useState([
         {label: 'Volunteerer', value: 'volunteerer'},
         {label: 'Volunteer Owner', value: 'volunteerOwner'}
     ]);
 
 
-    async function processLogin(){
+    async function processSignup(){
         const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+        console.log(email, password, username, accountType)
         if (!email){
             setError("You haven't entered an email")
         }
@@ -33,7 +34,10 @@ export default function Signup() {
         if (!username) {
             setError2("You haven't entered a username")
         }
-        const auth = await axios.post(`${apiUrl}/auth/login`, {email, password})
+        if (!accountType) {
+            setError3("You haven't entered your account type")
+        }
+        const auth = await axios.post(`${apiUrl}/auth/signup`, {email, username, accountType, password})
         if (auth.status === 500){
             setError("Not able to login")
             return
@@ -66,10 +70,10 @@ export default function Signup() {
             <ThemedText style={styles.text}>Account Type</ThemedText>
             <DropDownPicker
             open={open}
-            value={value}
+            value={accountType}
             items={items}
             setOpen={setOpen}
-            setValue={setValue}
+            setValue={setAccountType}
             setItems={setItems}
             textStyle={styles.text}
             placeholderStyle={styles.text}
@@ -90,7 +94,7 @@ export default function Signup() {
             <ThemedText style={styles.errorText}>{error1}</ThemedText>
             <ThemedText style={styles.errorText}>{error2}</ThemedText>
             <View style={styles.view}>
-                <Pressable style={styles.button} onPress={() => console.info("You pressed register")}>
+                <Pressable style={styles.button} onPress={() => processSignup()}>
                     <Text style={styles.buttonText}>Register</Text>
                 </Pressable>
             </View>

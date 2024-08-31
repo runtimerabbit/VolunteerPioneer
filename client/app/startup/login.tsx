@@ -36,6 +36,7 @@ export default function Login(){
                 setError("Unable to store data")
             }
         }
+        await _storeData()
         router.navigate("/(tabs)/")
     }
     return (
