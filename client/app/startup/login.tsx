@@ -13,8 +13,6 @@ export default function Login(){
     const [error1, setError1] = useState("");
     async function processLogin(){
         const apiUrl = process.env.EXPO_PUBLIC_API_URL
-        console.info(apiUrl) 
-        console.info(email, password)
         if (!email){
             setError("You haven't entered an email")
         }

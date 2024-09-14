@@ -6,13 +6,40 @@ import { useEffect, useState } from 'react';
 import { useFonts, MPLUSRounded1c_800ExtraBold } from "@expo-google-fonts/m-plus-rounded-1c"
 import * as SplashScreen from "expo-splash-screen"
 import { FontAwesome5 } from '@expo/vector-icons/';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useRouter } from 'expo-router';
+import axios from 'axios';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 export default function TabTwoScreen() {
+  const router = useRouter()
+  const [token, setToken] = useState("")
+  const [user, setUser] = useState<{ username: string, profilePicture: string, role: string } | null>(null)
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL
+  let _retrieveData = async () => {
+    try {
+        const value = await AsyncStorage.getItem('key');
+        if (value !== null){
+          let {data} = await axios.get(`${apiUrl}/users/`, {
+            headers: {
+                "x-access-token": value
+            }
+          });
+          
+          setUser(data.data)
+        }
+        else {
+          router.replace("/startup")
+        }
+    }   catch (error) {
+        router.replace("/startup")
+    }
+  }
+  _retrieveData()
+
   SplashScreen.preventAutoHideAsync()
   const isDarkTheme = useColorScheme() === "dark"
-  const [user, setUser] = useState<{ username: string, profilePicture: string, role: string } | null>(null)
   const [loaded, error] = useFonts({
     MPLUSRounded1c_800ExtraBold
   });
@@ -37,15 +64,9 @@ export default function TabTwoScreen() {
         ></Image>
         <View style={styles.row}>
           <ThemedText style={styles.nameText}>{user?.username ?? "John Smith"}</ThemedText>
-          <Pressable style={styles.editButton} onPress={() => console.info("You pressed edit name")}>
-            <FontAwesome5 name="edit" color={isDarkTheme ? "#FFFFFF" : "#000000"} style={{}} size={14}></FontAwesome5>
-          </Pressable>
         </View>
         <View style={styles.row1}>
-          <ThemedText style={styles.accountTypeText}>Account Type: {user?.role ?? "None"}</ThemedText>
-          <Pressable style={styles.editButton} onPress={() => console.info("You pressed edit account type")}>
-            <FontAwesome5 name="edit" color={isDarkTheme ? "#FFFFFF" : "#000000"} style={{}} size={14}></FontAwesome5>
-          </Pressable>
+          <ThemedText style={styles.accountTypeText}>{user?.role ?? "No Account Type"}</ThemedText>
         </View>
       </ThemedView>
     </>
@@ -71,20 +92,16 @@ const styles = StyleSheet.create({
     borderRadius: 150 / 2,
     overflow: "hidden",
     borderWidth: 6,
-    // top: -205,
     borderColor: "#93c47d",
     marginBottom: 20
   },
   nameText: {
-    // top: -190,
     fontSize: 22,
     fontFamily: "MPLUSRounded1c_800ExtraBold",
-    // right: 4
   },
   accountTypeText: {
     fontFamily: "MPLUSRounded1c_800ExtraBold",
-    // top: -220,
-    // right: 4
+    fontSize: 18
   },
   editButton: {
     justifyContent: "center",

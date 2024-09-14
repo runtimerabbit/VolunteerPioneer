@@ -24,7 +24,6 @@ export default function Signup() {
 
     async function processSignup(){
         const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-        console.log(email, password, username, accountType)
         if (!email){
             setError("You haven't entered an email")
         }

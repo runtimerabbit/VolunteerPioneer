@@ -20,10 +20,11 @@ function userRouter() {
     });
     router.get("/", async (req: Request, res: Response) => {
         const token = req.get("x-access-token");
+        console.log(token)
         if (!token){
             return res.status(401).send({error: "Unauthorized", status:401})
         }
-        let {data:{user}} = await supabase.auth.getUser(token);
+        const { data: { user } } = await supabase.auth.getUser(token)
         if (!user) {
                return res.status(401).send({error: "Unauthorized", status:401})
         }

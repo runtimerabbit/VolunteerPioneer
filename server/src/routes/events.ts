@@ -1,6 +1,6 @@
 import { Router } from "express"
 import type { Response, Request } from "express"
-import { getEvents, deleteEvent, createEvent, updateEvent, getEvent } from "../controllers/events"
+import { getEvents, deleteEvent, createEvent, updateEvent, getEvent, getUserEvents } from "../controllers/events"
 import { supabase } from "../util/supabase"
 import { isDate } from "util/types";
 
@@ -14,7 +14,7 @@ function eventRouter() {
         }
         let {data:{user}} = await supabase.auth.getUser(token);
         if (!user) {
-               return res.status(401).send({error: "Unauthorized", status:401})
+               return res.status(401).send({error: "Unauthorized1", status:401})
         }
         let creator = user.id;
         let event = await createEvent(title, description, date, location, creator);
@@ -24,16 +24,32 @@ function eventRouter() {
         let events = await getEvents();
         return res.status(events.status).send(events)
     });
+    router.get("/events", async (req: Request, res: Response) => {
+        const token = req.get("x-access-token");
+        if (!token){
+            return res.status(401).send({error: "Unauthorized", status:401})
+        }
+        let {data:{user}} = await supabase.auth.getUser(token);
+        if (!user) {
+               return res.status(401).send({error: "Unauthorized", status:401})
+        }
+        let creator = user.id;
+        let userEvents = await getUserEvents(creator)
+        return res.status(userEvents.status).send(userEvents)
+    })
+    
     router.get("/:id", async (req: Request, res: Response) => {
         let event = await getEvent(req.params.id)
         return res.status(event.status).send(event)
     });
+
     router.delete("/:id", async (req: Request, res: Response) => {
         const token = req.get("x-access-token");
         if (!token){
             return res.status(401).send({error: "Unauthorized", status:401})
         }
         let {data:{user}} = await supabase.auth.getUser(token);
+        console.log(user)
         if (!user) {
                return res.status(401).send({error: "Unauthorized", status:401})
         }
