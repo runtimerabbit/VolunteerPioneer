@@ -1,4 +1,4 @@
-import { useState,  useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Image, Platform } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import { Header } from '@rneui/base';
@@ -12,47 +12,52 @@ import { Event } from './components/Event';
 export default function TabTwoScreen() {
   const [userInput, setUserInput] = useState("")
   const [data, setData] = useState<[] | null>(null)
-    const apiUrl = process.env.EXPO_PUBLIC_API_URL;
-    const router = useRouter()
+  const apiUrl = process.env.EXPO_PUBLIC_API_URL;
+  const router = useRouter()
+  const [isFetching, setIsFetching] = useState(false)
 
-    useEffect(() => {
-        (async () => {
-            const token = await AsyncStorage.getItem('key');
-            const eventData = await axios.get(`${apiUrl}/events`, {
-                headers: {
-                    "x-access-token": token
-                }
-            })
-            setData(eventData.data.data)
-        })();
-    }, [data !== null])
+  function onRefresh() {
+    setIsFetching(true), () => { getData() }
+    setIsFetching(false)
+  }
 
+  const getData = (async () => {
+    const token = await AsyncStorage.getItem('key');
+    const eventData = await axios.get(`${apiUrl}/events/events/`, {
+      headers: {
+        "x-access-token": token
+      }
+    })
+    setData(eventData.data.data)
+  })
+
+  getData()
 
   return (
     <>
-    <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 35, fontSize: 25 } }} backgroundColor='#93c47d'>
-    </Header>
-    <ThemedView style={styles.container}>
-      <SearchBar
-      placeholder='Food banks near me'
-      onChangeText={(userInput) => {setUserInput(userInput)}}
-      value={userInput}
-      round={true}
-      >
-      </SearchBar>
-      <FlatList
-        data={data}
-        renderItem={
-        ({ item }: { item: Record<string, string> }) => <Event
-        id={item?.id}
-        title={item?.title}
-        description={item?.description}
-        date={item?.date}
-        location={item?.location}/>
-                    }
-                    keyExtractor={item => item.id}
-                />
-    </ThemedView>
+      <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 35, fontSize: 25 } }} backgroundColor='#93c47d'>
+      </Header>
+      <ThemedView style={styles.container}>
+        <SearchBar
+          placeholder='Food banks near me'
+          onChangeText={(userInput) => { setUserInput(userInput) }}
+          value={userInput}
+          round={true}
+        >
+        </SearchBar>
+        <FlatList
+          data={data}
+          renderItem={
+            ({ item }: { item: Record<string, string> }) => <Event
+              id={item?.id}
+              title={item?.title}
+              description={item?.description}
+              date={item?.date}
+              location={item?.location} />
+          }
+          keyExtractor={item => item.id}
+        />
+      </ThemedView>
     </>
   )
 }

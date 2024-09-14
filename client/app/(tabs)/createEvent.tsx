@@ -9,6 +9,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
+import { create } from 'zustand';
 
 export default function TabTwoScreen() {
   const [title, setTitle] = useState("");
@@ -22,7 +23,7 @@ export default function TabTwoScreen() {
   const [error3, setError3] = useState("");
   const apiUrl = process.env.EXPO_PUBLIC_API_URL
   const router = useRouter()
-  const navigation = useNavigation()
+
   let _retrieveData = async () => {
     try {
         const value = await AsyncStorage.getItem('key');
@@ -35,9 +36,11 @@ export default function TabTwoScreen() {
     }   catch (error) {
         router.replace("/startup")
     }
-}
+  } 
 
   _retrieveData()
+
+  
 
   const createEvent = (async () => {
     if (title !== "" && description !== "" && date !== undefined && location !== ""){

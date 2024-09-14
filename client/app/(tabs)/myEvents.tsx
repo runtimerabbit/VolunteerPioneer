@@ -6,26 +6,29 @@ import { ThemedText } from '@/components/ThemedText';
 import axios from "axios";
 import { Event } from "./components/Event"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Redirect, useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, } from 'expo-router';
 
 export default function TabTwoScreen() {
     const [data, setData] = useState<[] | null>(null)
     const apiUrl = process.env.EXPO_PUBLIC_API_URL;
     const router = useRouter()
-    const localSearchParams = useLocalSearchParams();
-    console.log(localSearchParams)
+    const [isFetching, setIsFetching] = useState(false)
+    function onRefresh(){
+        setIsFetching(true), () => {getData()}
+        setIsFetching(false)
+      }
 
-    useEffect(() => {
-        (async () => {
-            const token = await AsyncStorage.getItem('key');
-            const eventData = await axios.get(`${apiUrl}/events/events/`, {
-                headers: {
-                    "x-access-token": token
-                }
-            })
-            setData(eventData.data.data)
-        })();
-    }, [data !== null])
+    const getData = (async () => {
+        const token = await AsyncStorage.getItem('key');
+        const eventData = await axios.get(`${apiUrl}/events/events/`, {
+            headers: {
+                "x-access-token": token
+            }
+        })
+        setData(eventData.data.data)
+    })
+    
+    getData()
 
     return (
        <>
@@ -43,6 +46,8 @@ export default function TabTwoScreen() {
                             location={item?.location}
                         />
                     }
+                    refreshing={isFetching}
+                    onRefresh={() => {onRefresh()}}
                     keyExtractor={item => item.id}
                 />
                 <View style={styles.view}>
