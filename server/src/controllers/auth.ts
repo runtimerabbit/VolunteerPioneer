@@ -3,13 +3,15 @@ import { supabase } from "../util/supabase";
 async function signup(email: string, password: string, username: string, accountType: string ) {
     const {data, error} = await supabase.auth.signUp ({email, password});
     if (error) {
+        console.log(error)
         return {
             status: 500,
             error: error.message
         }
     }
-    const {data: userData, error: userError} = await supabase.from("users").insert([{username, role: accountType}]).select();
+    const {data: userData, error: userError} = await supabase.from("users").insert([{id: data.user.id, username, role: accountType}]).select();
     if (userError) {
+        console.log(userError)
         return {
             status: 500,
             error: userError.message
@@ -28,13 +30,10 @@ async function signup(email: string, password: string, username: string, account
 }
 
 async function login(email: string, password: string) {
-    console.log("login controller touched")
-    console.log(email, password)
     const {data, error} = await supabase.auth.signInWithPassword ({
         email: email, 
         password: password
     });
-    // console.info(data, error)
     if (error) {
         return {
             status: 500,
@@ -47,4 +46,17 @@ async function login(email: string, password: string) {
     }
 }
 
-export {signup, login}
+async function logout(){
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+        return {
+            status: 500,
+            error: "Could not sign out. Welp."
+        }
+    }
+    return {
+        status:200
+    }
+}
+
+export {signup, login, logout}

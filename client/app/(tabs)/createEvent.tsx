@@ -9,7 +9,6 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
-import { create } from 'zustand';
 
 export default function TabTwoScreen() {
   const [title, setTitle] = useState("");

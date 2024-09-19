@@ -1,4 +1,4 @@
-import { StyleSheet, Image, View, Platform, useColorScheme, Dimensions, Pressable } from 'react-native';
+import { StyleSheet, Image, View, Platform, useColorScheme, Dimensions, Pressable, Text } from 'react-native';
 import { Header } from '@rneui/base';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -9,6 +9,7 @@ import { FontAwesome5 } from '@expo/vector-icons/';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import axios from 'axios';
+
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -37,6 +38,10 @@ export default function TabTwoScreen() {
     }
   }
   _retrieveData()
+
+  const logout = async () => {
+    const auth = await axios.post(`${apiUrl}/auth/logout`)
+  }
 
   SplashScreen.preventAutoHideAsync()
   const isDarkTheme = useColorScheme() === "dark"
@@ -67,6 +72,11 @@ export default function TabTwoScreen() {
         </View>
         <View style={styles.row1}>
           <ThemedText style={styles.accountTypeText}>{user?.role ?? "No Account Type"}</ThemedText>
+        </View>
+        <View style={styles.view}>
+          <Pressable style={styles.button} onPress={() => logout()}>
+            <Text style={styles.buttonText}>Log Out</Text>
+          </Pressable>
         </View>
       </ThemedView>
     </>
@@ -120,5 +130,26 @@ const styles = StyleSheet.create({
     padding: 2,
     justifyContent: "space-around",
     paddingHorizontal: windowWidth / 4
+  },
+  button: {
+    justifyContent: 'center',
+    marginTop: 0,
+    paddingVertical: 12,
+    paddingHorizontal: 38,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: '#93c47d',
+  },
+  buttonText: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: 'bold',
+    letterSpacing: 0.25,
+    color: 'white',
+    alignItems: "center"
+  },
+  view: {
+    alignItems: "center",
+    marginTop: 220
   }
 });

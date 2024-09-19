@@ -1,6 +1,6 @@
 import { Router } from "express";
 import type { Request, Response } from "express";
-import { signup, login } from "../controllers/auth"
+import { signup, login, logout } from "../controllers/auth"
 
 function authRouter() {
     const router: Router = Router()
@@ -16,6 +16,10 @@ function authRouter() {
         const auth = await login(email, password)
         return res.status(auth.status).send(auth)
     })
+    router.post("/logout", async (req: Request, res: Response) => {
+        const auth = await logout()
+        return res.status(auth.status)
+    }) 
     return router
 }
 
