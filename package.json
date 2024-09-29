@@ -1,1 +1,1 @@
-{ "dependencies": { "react-native-swipe-gesture-handler": "^1.0.6" } }
+{ "dependencies": { "@react-native-menu/menu": "^1.1.2", "dripsy": "^4.3.5", "react-native-ios-context-menu": "^2.5.1", "react-native-ios-utilities": "^4.5.0", "react-native-swipe-gesture-handler": "^1.0.6", "zeego": "^1.10.0" } }

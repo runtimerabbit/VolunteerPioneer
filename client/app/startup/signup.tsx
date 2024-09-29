@@ -17,8 +17,8 @@ export default function Signup() {
     const [error3, setError3] = useState("");
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState([
-        {label: 'Volunteerer', value: 'volunteerer'},
-        {label: 'Volunteer Owner', value: 'volunteerOwner'}
+        {label: 'Volunteerer', value: 'Volunteerer'},
+        {label: 'Volunteer Owner', value: 'Volunteer Owner'}
     ]);
 
 
@@ -38,7 +38,7 @@ export default function Signup() {
         }
         const auth = await axios.post(`${apiUrl}/auth/signup`, {email, username, accountType, password})
         if (auth.status === 500){
-            setError("Not able to login")
+            setError("Not able to signup")
             return
         }
         router.navigate("/startup/login")

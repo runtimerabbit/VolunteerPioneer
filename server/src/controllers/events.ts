@@ -78,11 +78,17 @@ const optIn = async (userId: string, eventId: string) => {
 }
 
 const optOut = async (eventId: string, userId: string) => {
-    const { data:evtCheck } = await supabase.from("participants").select();
+    const { data:evtCheck } = await supabase.from("participants").select().eq("eventId", eventId).eq("userId", userId);
     if(!evtCheck){
         return { error: "Not Found", status: 404};
     }
-    const { data:evtdata } = await supabase.from("participants").delete().eq("eventId", eventId).eq("userId", userId)
+    const { data:evtdata, error } = await supabase.from("participants").delete().eq("eventId", eventId).eq("userId", userId);
+    if (error){
+        return {
+            error,
+            status: 500
+        }
+    }
     return { data: "Opted out. Lazy", status: 200 }
 }
 

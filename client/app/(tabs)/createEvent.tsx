@@ -9,6 +9,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
 export default function TabTwoScreen() {
   const [title, setTitle] = useState("");
@@ -96,22 +97,31 @@ return (
             style={styles.datePicker}
             ></DateTimePicker>
             <ThemedText style={styles.text}>Location</ThemedText>
-            <TextInput
+            {/* <TextInput
             value={location}
             onChangeText={(text) => {setLocation(text)}}
             style={styles.textInput}
             autoComplete='street-address'
-            ></TextInput>
+            ></TextInput> */}
+            {/* <GooglePlacesAutocomplete
+            placeholder='Type your location'
+            query={{
+              key:"AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8",
+              language: "en"
+            }}
+            onPress={(data, details) => console.log(data, details)}
+            >
+            </GooglePlacesAutocomplete> */}
             <View style={styles.view}>
               <Pressable style={styles.button} onPress={() => {createEvent()}}>
                 <ThemedText style={styles.buttonText}>Create Event</ThemedText>
               </Pressable>
             </View>
             <View>
-            <ThemedText style={styles.errorText}>{error}</ThemedText>
-            <ThemedText style={styles.errorText}>{error1}</ThemedText>
-            <ThemedText style={styles.errorText}>{error2}</ThemedText>
-            <ThemedText style={styles.errorText}>{error3}</ThemedText>
+              <ThemedText style={styles.errorText}>{error}</ThemedText>
+              <ThemedText style={styles.errorText}>{error1}</ThemedText>
+              <ThemedText style={styles.errorText}>{error2}</ThemedText>
+              <ThemedText style={styles.errorText}>{error3}</ThemedText>
             </View>
         </ThemedView>
     </>

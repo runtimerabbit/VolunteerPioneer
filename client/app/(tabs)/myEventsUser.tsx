@@ -20,7 +20,7 @@ export default function TabTwoScreen() {
 
     const getData = (async () => {
         const token = await AsyncStorage.getItem('key');
-        const eventData = await axios.get(`${apiUrl}/events/events/`, {
+        const eventData = await axios.get(`${apiUrl}/events/participants/`, {
             headers: {
                 "x-access-token": token
             }
@@ -29,6 +29,7 @@ export default function TabTwoScreen() {
     })
     
     getData()
+    
 
     return (
        <>
@@ -37,6 +38,8 @@ export default function TabTwoScreen() {
             <ThemedView style={styles.container}>
                 <FlatList
                     data={data}
+                    refreshing={isFetching}
+                    onRefresh={() => {() => {onRefresh}}}
                     renderItem={
                         ({ item }: { item: Record<string, string> }) => <Event
                             id={item?.id}
@@ -44,19 +47,11 @@ export default function TabTwoScreen() {
                             description={item?.description}
                             date={item?.date}
                             location={item?.location}
-                            optIn={"false"}
-                            pressable={"false"}
+                            optedIn={"false"}
                         />
                     }
-                    refreshing={isFetching}
-                    onRefresh={() => {onRefresh()}}
                     keyExtractor={item => item.id}
                 />
-                <View style={styles.view}>
-                    <Pressable style={styles.button} onPress={() => {router.replace("/(tabs)/createEvent")}}>
-                        <ThemedText style={styles.buttonText}>Create Event</ThemedText>
-                    </Pressable>
-                </View>
             </ThemedView>
         </>
     )

@@ -52,7 +52,23 @@ export default function HomeScreen() {
       }} 
       // followsUserLocation={true}
       showsUserLocation={true}
-      style={styles.map}></MapView>
+      style={styles.map}>
+        {/* 
+          Markers goes here:
+            Map through your locations, create a <Marker> for each location. 
+            Marker takes in a key, coordinate, and pincolor. Coordinate should come from the location (somehow idk man)
+            Mapping through locations can look like:
+              Get all of your events, for example, let's say all the events are stored in a "events" state.
+              events.map((event) => (
+                <Marker
+                  key = {event.id}
+                  coordinate = {event.location (figure out how to parse in a coordinate value from the location)}
+                  pinColor={whatever color}
+                  />
+                ))
+              )
+         */}
+      </MapView>
     </StyledView>
     </>
   );

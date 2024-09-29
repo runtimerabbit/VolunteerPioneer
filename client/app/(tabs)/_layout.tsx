@@ -13,6 +13,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [roleAvailble, setRoleAvailable] = useState<any>("");
   const [dataRetrieved, setDataRetrieved] = useState(false);
+
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   let _retrieveData = async () => {
     try {
@@ -31,14 +32,10 @@ export default function TabLayout() {
       setDataRetrieved(true);
 
     } catch (error) {
-
+      console.error(error);
     }
   }
-  useEffect(() => {
-    (async () => {
-      await _retrieveData();
-    })();
-  }, [dataRetrieved === false])
+  _retrieveData()
 
   return (
     <GestureHandlerRootView>
@@ -79,6 +76,17 @@ export default function TabLayout() {
           options={{
             href: null
           }}
+        >
+        </Tabs.Screen>
+        <Tabs.Screen
+        name="myEventsUser"
+        options={{
+          title: "My Participation",
+          href: "/(tabs)/myEventsUser",
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'create' : 'create-outline'} size={32} color={color}></Ionicons>
+          )
+        }}
         >
         </Tabs.Screen>
         <Tabs.Screen

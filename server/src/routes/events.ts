@@ -1,6 +1,6 @@
 import { Router } from "express"
 import type { Response, Request } from "express"
-import { getEvents, deleteEvent, createEvent, updateEvent, getEvent, getUserEvents } from "../controllers/events"
+import { getEvents, deleteEvent, createEvent, updateEvent, getEvent, getUserEvents, optIn, optOut, getParticipatingEvents } from "../controllers/events"
 import { supabase } from "../util/supabase"
 import { isDate } from "util/types";
 
@@ -20,6 +20,19 @@ function eventRouter() {
         let event = await createEvent(title, description, date, location, creator);
         return res.status(event.status).send(event);
     });
+    router.get("/participants", async (req: Request, res: Response) => {
+        let token = req.get("x-access-token")
+        if (!token){
+            return res.status(401).send({error: "Unauthorized", status:401})
+        }
+        let {data:{user}} = await supabase.auth.getUser(token);
+        if (!user){
+            return res.status(401).send({error: "Unauthorized", status: 401})
+        }
+        let userId = user.id
+        let event = await getParticipatingEvents(userId)
+        return res.status(event.status).send(event)
+    })
     router.get("/", async (req: Request, res: Response)=>{
         let events = await getEvents();
         return res.status(events.status).send(events)
@@ -71,6 +84,36 @@ function eventRouter() {
         let event = await updateEvent(id, title, description, date, location, userId);
         return res.status(event.status).send(event)
     });
+    router.post("/optIn", async (req: Request, res: Response) => {
+        let token  = req.get("x-access-token")
+        if (!token){
+            return res.status(401).send({error: "Unauthorized1", status: 401})
+        }
+        let {data:{user}} = await supabase.auth.getUser(token);
+        if (!user) {
+               return res.status(401).send({error: "Unauthorized2", status:401})
+        }
+        let userId = user.id;
+        const { eventId } = req.body;
+        let opt = await optIn(userId, eventId)
+        return res.status(opt.status).send(opt)
+    })
+    router.delete("/optOut/:eventId", async (req: Request, res: Response) => {
+        let token = req.get("x-access-token")
+        if (!token){
+            return res.status(401).send({error: "Unauthorized", status: 401})
+        }
+        let {data:{user}} = await supabase.auth.getUser(token)
+        if (!user) {
+            return res.status(401).send({error: "Unauthorized", status:401})
+        }
+        let userId = user.id
+        const { eventId } = req.params
+        let opt = await optOut(userId, eventId)
+        return res.status(opt.status).send(opt)
+    }
+
+)
     return router;
 }
 
