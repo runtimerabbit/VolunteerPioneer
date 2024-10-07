@@ -25,6 +25,8 @@ export default function TabTwoScreen() {
                 "x-access-token": token
             }
         })
+        console.info(eventData.data.data)
+        
         setData(eventData.data.data)
     })
     
@@ -44,7 +46,7 @@ export default function TabTwoScreen() {
                             description={item?.description}
                             date={item?.date}
                             location={item?.location}
-                            optIn={"false"}
+                            optedIn={"false"}
                             pressable={"false"}
                         />
                     }

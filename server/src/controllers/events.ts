@@ -1,8 +1,8 @@
 import { supabase } from "../util/supabase"
 
-const createEvent = async (title: string, description: string, date: string, location: string, creator: string) => {
+const createEvent = async (title: string, description: string, date: string, location: string, creator: string, lat: string, long: string) => {
     const { data, error } = await supabase.from("events").insert([
-        { title, description, date, location, creator }
+        { title, description, date, location, creator, lat, long }
     ]).select();
     if (error) {
         console.log(error)
@@ -51,18 +51,20 @@ const getEventParticipants = async(eventId: string) => {
 const getParticipatingEvents = async(userId: string) => {
     const { data, error } = await supabase.from("participants").select("eventId").eq("userId", userId)
     if (error) {
+        console.error(error)
         return { error, status:500 }
     }
     let events: any[] = []
-    await data.forEach(async ({eventId}) => {
+    for(let eventData of data){
+        const eventId = eventData.eventId;
         const { data: event, error: eventError } = await supabase.from("events").select().eq("id", eventId);
         if(eventError){
             console.error(`${eventId} errored`);
         } else {
+            console.info(`Event: ${event}, ${eventId}`)
             events.push(event);
         }
-        return events;
-    })
+    }
     return {
         data: events,
         status: 200
@@ -77,9 +79,9 @@ const optIn = async (userId: string, eventId: string) => {
     return { data, status:200 }
 }
 
-const optOut = async (eventId: string, userId: string) => {
+const optOut = async (userId: string, eventId: string) => {
     const { data:evtCheck } = await supabase.from("participants").select().eq("eventId", eventId).eq("userId", userId);
-    if(!evtCheck){
+    if(!evtCheck || evtCheck.length === 0){
         return { error: "Not Found", status: 404};
     }
     const { data:evtdata, error } = await supabase.from("participants").delete().eq("eventId", eventId).eq("userId", userId);
@@ -128,4 +130,12 @@ const updateEvent = async (eventId: string, title: string, description: string, 
     return {data, status:200}
 }
 
-export { createEvent, updateEvent, deleteEvent, getEvents, getEvent, getUserEvents, getParticipatingEvents, optIn, optOut, getEventParticipants }
+const searchEvents = async (title: string) => {
+    const { data, error } = await supabase.from("events").select().textSearch("title", title)
+    if (error){
+        return {error, status: 404}
+    }
+    return {data, status: 200}
+}
+
+export { createEvent, updateEvent, deleteEvent, getEvents, getEvent, getUserEvents, getParticipatingEvents, optIn, optOut, getEventParticipants, searchEvents }

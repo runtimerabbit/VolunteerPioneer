@@ -1,13 +1,13 @@
 import { Router } from "express"
 import type { Response, Request } from "express"
-import { getEvents, deleteEvent, createEvent, updateEvent, getEvent, getUserEvents, optIn, optOut, getParticipatingEvents } from "../controllers/events"
+import { getEvents, deleteEvent, createEvent, updateEvent, getEvent, getUserEvents, optIn, optOut, getParticipatingEvents, searchEvents } from "../controllers/events"
 import { supabase } from "../util/supabase"
 import { isDate } from "util/types";
 
 function eventRouter() {
     const router: Router = Router();
     router.post("/", async (req: Request, res: Response) => {
-        const {title, description, date, location}: Record <string, string> = req.body;
+        const {title, description, date, lat, long, location}: Record <string, string> = req.body;
         const token = req.get("x-access-token");
         if (!token){
             return res.status(401).send({error: "Unauthorized", status:401})
@@ -17,7 +17,7 @@ function eventRouter() {
                return res.status(401).send({error: "Unauthorized1", status:401})
         }
         let creator = user.id;
-        let event = await createEvent(title, description, date, location, creator);
+        let event = await createEvent(title, description, date,  location, creator, lat, long,);
         return res.status(event.status).send(event);
     });
     router.get("/participants", async (req: Request, res: Response) => {
@@ -87,11 +87,11 @@ function eventRouter() {
     router.post("/optIn", async (req: Request, res: Response) => {
         let token  = req.get("x-access-token")
         if (!token){
-            return res.status(401).send({error: "Unauthorized1", status: 401})
+            return res.status(401).send({error: "Unauthorized", status: 401})
         }
         let {data:{user}} = await supabase.auth.getUser(token);
         if (!user) {
-               return res.status(401).send({error: "Unauthorized2", status:401})
+               return res.status(401).send({error: "Unauthorized", status:401})
         }
         let userId = user.id;
         const { eventId } = req.body;
@@ -111,8 +111,13 @@ function eventRouter() {
         const { eventId } = req.params
         let opt = await optOut(userId, eventId)
         return res.status(opt.status).send(opt)
-    }
-
+    },
+    router.get("/search/event", async (req: Request, res: Response) => {
+        console.info(req.query);
+        let name = req.query.name as string;
+        const event = await searchEvents(name)
+        return res.status(event.status).send(event)
+    })
 )
     return router;
 }

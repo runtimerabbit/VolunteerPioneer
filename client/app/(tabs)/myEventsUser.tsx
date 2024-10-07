@@ -25,10 +25,13 @@ export default function TabTwoScreen() {
                 "x-access-token": token
             }
         })
-        setData(eventData.data.data)
+        setData(eventData.data.data[0])
     })
-    
-    getData()
+    useEffect(() => {
+        (async () => {
+            await getData()
+        })()
+    }, [data !== null])
     
 
     return (
@@ -36,10 +39,8 @@ export default function TabTwoScreen() {
             <Header centerComponent={{ text: 'Volunteer Pioneer', style: { color: '#fff', fontWeight: 'bold', height: 35, fontSize: 25 } }} backgroundColor='#93c47d'>
             </Header>
             <ThemedView style={styles.container}>
-                <FlatList
+            <FlatList
                     data={data}
-                    refreshing={isFetching}
-                    onRefresh={() => {() => {onRefresh}}}
                     renderItem={
                         ({ item }: { item: Record<string, string> }) => <Event
                             id={item?.id}
@@ -47,9 +48,12 @@ export default function TabTwoScreen() {
                             description={item?.description}
                             date={item?.date}
                             location={item?.location}
-                            optedIn={"false"}
+                            optedIn={"true"}
+                            pressable={"true"}
                         />
                     }
+                    refreshing={isFetching}
+                    onRefresh={() => {onRefresh()}}
                     keyExtractor={item => item.id}
                 />
             </ThemedView>

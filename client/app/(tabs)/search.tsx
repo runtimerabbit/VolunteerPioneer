@@ -1,4 +1,4 @@
-import { useState, } from 'react';
+import { useState, useEffect } from 'react';
 import { StyleSheet, Dimensions, } from 'react-native';
 import { SearchBar } from '@rneui/themed';
 import { Button, Header } from '@rneui/base';
@@ -16,9 +16,21 @@ const windowWidth = Dimensions.get("window").width
 
 export default function TabTwoScreen() {
   const [userInput, setUserInput] = useState("")
-  const [data, setData] = useState<[] | null>(null)
+  const [data, setData] = useState<any[] | null>(null)
+  const [searched, setSearched] = useState<any>()
+  const [refreshing, setRefreshing] = useState(false)
   const apiUrl = process.env.EXPO_PUBLIC_API_URL;
   const router = useRouter()
+
+  const search = async (userInput: string) => {
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL
+    const { data } = await axios.get(`${apiUrl}/events/search/event`, {
+      params: {
+        name: userInput
+      }
+    })
+    setSearched(data)
+  }
 
   const getData = (async () => {
     const token = await AsyncStorage.getItem('key');
@@ -38,12 +50,48 @@ export default function TabTwoScreen() {
     let user_id = userData.id;
     parsedData = parsedData.filter((event: any) => event.creator !== user_id)
 
-    setData(parsedData)
-  })  
-  getData()
-  const optIn = (async () => { 
 
-  })
+    let participants = await axios.get(`${apiUrl}/events/participants`, {
+      headers: {
+        "x-access-token": token
+      }
+    })
+    let participatingEvents = participants.data.data[0];
+    participatingEvents = participatingEvents.map((event: any) => event = event.id)
+    let updatedEvents: any[] = parsedData;
+    for(let event of updatedEvents){
+      if (participatingEvents.includes(event.id)){
+        event.optedIn = "true"
+      }
+      else {
+        event.optedIn = "false"
+      }
+    }
+
+    
+
+    // setData(updatedEvents)
+
+  // setData(participants.data.data.map((event: any) => {
+  //   if e
+  // }))
+  
+    /*
+      Do a GET on participants,
+      Once you have those, iterate through either list of events, check if each event is in the participant list
+      If it is, update the parsedData to include a "optedIn" value that is "true" or "false"
+    */
+
+    // parsedData = parsedData.map(async (event: any) => {
+    //   await axios.get("event/participants");
+    //   // if this event is in ThemedTab, opted in = True
+    // })
+
+    setData(updatedEvents)
+  })  
+  useEffect(() => {
+    getData()
+  }, [data !== null])
   
   return (
     <>
@@ -52,7 +100,9 @@ export default function TabTwoScreen() {
       <ThemedView style={styles.container}>
         <SearchBar
           placeholder='Food banks near me'
-          onChangeText={(userInput) => { setUserInput(userInput) }}
+          onChangeText={(userInput) => { setUserInput(userInput);
+            search(userInput)
+           }}
           value={userInput}
           round={true}
           >
@@ -68,9 +118,12 @@ export default function TabTwoScreen() {
                   date={item?.date}
                   location={item?.location} 
                   pressable={"true"}
+                  optedIn={item?.optedIn}
                   />   
             }
             keyExtractor={item => item.id}
+            refreshing={refreshing}
+            onRefresh={() => getData()}
             style={{height: Dimensions.get("window").height * 0.7}}
           />
 

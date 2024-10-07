@@ -40,7 +40,9 @@ export default function TabTwoScreen() {
   _retrieveData()
 
   const logout = async () => {
-    const auth = await axios.post(`${apiUrl}/auth/logout`)
+    const auth = await axios.post(`${apiUrl}/auth/logout`);
+    console.info(auth.status);
+    // router.replace("/startup/")
   }
 
   SplashScreen.preventAutoHideAsync()
@@ -74,7 +76,7 @@ export default function TabTwoScreen() {
           <ThemedText style={styles.accountTypeText}>{user?.role ?? "No Account Type"}</ThemedText>
         </View>
         <View style={styles.view}>
-          <Pressable style={styles.button} onPress={() => logout()}>
+          <Pressable style={styles.button} onPress={async () => await logout()}>
             <Text style={styles.buttonText}>Log Out</Text>
           </Pressable>
         </View>

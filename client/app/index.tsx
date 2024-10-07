@@ -20,9 +20,11 @@ const Index = () => {
                 router.replace("/(tabs)/")
             }
             else {
+                console.warn("token invalid")
                 router.replace("/startup")
             }
-        }   catch (error) {
+        } catch (error) {
+            console.warn(error, "Error in the request")
             router.replace("/startup")
         }
     }

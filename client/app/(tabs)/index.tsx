@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { Image, StyleSheet, Platform, View, Text } from 'react-native';
 import { styled } from 'nativewind';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Header } from '@rneui/themed';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
 
 import * as Location from 'expo-location'
 import { getNavigationConfig } from 'expo-router/build/getLinkingConfig';
@@ -17,6 +20,30 @@ let hardcodedTextColor = "text-[#f00000]";
 export default function HomeScreen() {
   const [location, setLocation] = useState<Location.LocationObject | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>();
+  const [data, setData] = useState<any>(null);
+
+  const getData = (async () => {
+    const token = await AsyncStorage.getItem('key');
+    const apiUrl = process.env.EXPO_PUBLIC_API_URL
+    
+    const { data: { data: userData }} = await axios.get(`${apiUrl}/users/`, {
+      headers: {
+        "x-access-token": token
+      }});
+
+    const eventData = await axios.get(`${apiUrl}/events/`, {
+      headers: {
+        "x-access-token": token
+      }
+    })
+    let parsedData = eventData.data.data;
+    let user_id = userData.id;
+    parsedData = parsedData.filter((event: any) => event.creator !== user_id)
+
+    setData(parsedData)
+  })  
+
+  getData()
 
   useEffect(() => {
     (async () => {
@@ -26,9 +53,8 @@ export default function HomeScreen() {
         setErrorMsg('Permission to access location was denied');
         return;
       }
- 
+      
       let location = await Location.getCurrentPositionAsync({});
-      // @ts-ignore
       setLocation(location);
     })();
   }, [location !== null]);
@@ -68,6 +94,18 @@ export default function HomeScreen() {
                 ))
               )
          */}
+        {data?.map((event: any, index: number) => (
+          <Marker
+          coordinate={{
+            latitude: event.lat,
+            longitude: event.long
+          }}
+          key={index}
+          title={event.title}
+          description={event.description}
+          >
+          </Marker>
+        ))}
       </MapView>
     </StyledView>
     </>

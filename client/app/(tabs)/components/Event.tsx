@@ -46,15 +46,15 @@ const Event = ({id, title, description, date, location, optedIn, pressable}: Rec
         }
       }
     )
-  if (data.status === 401){
-    router.navigate("/startup/")
-  }
-  else if (data.status === 500){
-    setError("We regret to inform you our server is not working. We are totally working on this issue, and will be fixed in around 10 years. Cheers!")
-  }
-  else {
-    setOptedInData(false)
-  }
+    if (data.status === 401){
+      router.navigate("/startup/")
+    }
+    else if (data.status === 500){
+      setError("We regret to inform you our server is not working. We are totally working on this issue, and will be fixed in around 10 years. Cheers!")
+    }
+    else {
+      setOptedInData(false)
+    }
   }
 
   function showOptIn(optedIn: boolean) {

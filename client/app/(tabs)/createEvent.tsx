@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { useEffect, useRef, useState } from 'react';
+import { Pressable, StyleSheet, View, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { Header } from '@rneui/base';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -11,18 +11,27 @@ import { useRouter } from 'expo-router';
 import { useNavigation } from 'expo-router';
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete"
 
+
 export default function TabTwoScreen() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date())
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState<any>("");
   const [token, setToken] = useState("")
   const [error, setError] = useState("");
   const [error1, setError1] = useState("");
   const [error2, setError2] = useState("");
   const [error3, setError3] = useState("");
   const apiUrl = process.env.EXPO_PUBLIC_API_URL
+  const googleApiKey = process.env
   const router = useRouter()
+  const ref = useRef<any>();
+  const [lat, setLat] = useState<any>()
+  const [long, setLong] = useState<any>()
+
+  useEffect(() => {
+    ref.current?.setAddressText("");
+  }, []);
 
   let _retrieveData = async () => {
     try {
@@ -44,7 +53,7 @@ export default function TabTwoScreen() {
 
   const createEvent = (async () => {
     if (title !== "" && description !== "" && date !== undefined && location !== ""){
-      const event = await axios.post(`${apiUrl}/events`, {title, description, date, location}, {
+      const event = await axios.post(`${apiUrl}/events`, {title, description, date, lat, long, location}, {
         headers: {
           "x-access-token": token
         }
@@ -78,12 +87,17 @@ return (
         </Header>
         <ThemedView style={styles.container}>
             <ThemedText style={styles.titleText}>Create Event</ThemedText>
+            <ScrollView keyboardShouldPersistTaps={'handled'}>
+            <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            >
             <ThemedText style={styles.text}>Title</ThemedText>
             <TextInput
                 value={title}
                 onChangeText={(text) => {setTitle(text)}}
                 style={styles.textInput}
             ></TextInput>
+            </KeyboardAvoidingView>
             <ThemedText style={styles.text}>Description</ThemedText>
             <TextInput
             value={description}
@@ -97,21 +111,34 @@ return (
             style={styles.datePicker}
             ></DateTimePicker>
             <ThemedText style={styles.text}>Location</ThemedText>
-            {/* <TextInput
-            value={location}
-            onChangeText={(text) => {setLocation(text)}}
-            style={styles.textInput}
-            autoComplete='street-address'
-            ></TextInput> */}
-            {/* <GooglePlacesAutocomplete
-            placeholder='Type your location'
-            query={{
-              key:"AIzaSyCoveCCHopXULsHaBKuG44cwYiDl_v-1-8",
-              language: "en"
+           <View style={{
+            zIndex: 1,
+            flex: 0.5
             }}
-            onPress={(data, details) => console.log(data, details)}
             >
-            </GooglePlacesAutocomplete> */}
+            <GooglePlacesAutocomplete
+                styles={{
+                  textInput: {
+                    alignSelf: "center",
+                    justifyContent: "center",
+                    alignItems: "center"
+                  },
+                }}
+                fetchDetails={true}
+                ref={ref}
+                placeholder='Search'
+                onPress={(data, details = null) => {
+                    // 'details' is provided when fetchDetails = true
+                    setLat(details?.geometry.location.lat)
+                    setLong(details?.geometry.location.lng)
+                    setLocation(details?.formatted_address)
+                }}
+                query={{
+                    key: "AIzaSyBbdTenlsre54wezQAxxc_csgtX77Z93Ds",
+                    language: 'en',
+                }}
+            />
+          </View>
             <View style={styles.view}>
               <Pressable style={styles.button} onPress={() => {createEvent()}}>
                 <ThemedText style={styles.buttonText}>Create Event</ThemedText>
@@ -123,6 +150,7 @@ return (
               <ThemedText style={styles.errorText}>{error2}</ThemedText>
               <ThemedText style={styles.errorText}>{error3}</ThemedText>
             </View>
+            </ScrollView>
         </ThemedView>
     </>
   )
@@ -156,13 +184,13 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
   datePicker: {
-    alignItems: "center",
+    alignSelf: "center",
     width: 250,
     height: 100,
   },
   button: {
     justifyContent: 'center',
-    marginTop: 0,
+    marginTop: 25,
     paddingVertical: 12,
     paddingHorizontal: 38,
     borderRadius: 4,
@@ -175,7 +203,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
-    alignItems: "center"
+    alignItems: "center",
+    marginTop: 0
   },
   view: {
     alignItems: "center",
