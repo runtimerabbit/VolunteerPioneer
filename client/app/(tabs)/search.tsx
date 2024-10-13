@@ -5,7 +5,7 @@ import { Button, Header } from '@rneui/base';
 import { useRouter } from 'expo-router';
 import { ThemedView } from '@/components/ThemedView';
 import { FlatList } from 'react-native';
-import { Event } from './components/Event';
+import { Event } from './Event';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 

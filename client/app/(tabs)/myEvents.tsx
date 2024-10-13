@@ -4,7 +4,7 @@ import { Header } from '@rneui/base';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import axios from "axios";
-import { Event } from "./components/Event"
+import { Event } from "./Event"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, } from 'expo-router';
 

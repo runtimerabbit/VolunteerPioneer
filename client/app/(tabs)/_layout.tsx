@@ -100,6 +100,13 @@ export default function TabLayout() {
           }}
         >
         </Tabs.Screen>
+        <Tabs.Screen
+        name='Event'
+        options={{
+          href: null
+        }}
+        >
+        </Tabs.Screen>
       </Tabs>
     </GestureHandlerRootView>
   );
