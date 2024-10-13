@@ -131,11 +131,33 @@ const updateEvent = async (eventId: string, title: string, description: string, 
 }
 
 const searchEvents = async (title: string) => {
-    const { data, error } = await supabase.from("events").select().textSearch("title", title)
-    if (error){
-        return {error, status: 404}
+    const { data: title_events, error: title_events_error } = await supabase.from("events").select().ilike("title", `%${title}%`)
+    const { data: location, error: location_error } = await supabase.from("events").select().ilike("location", `%${title}%`);
+
+    let events: any[] = [];
+    let event_ids: string[] = [];
+
+    if (title_events){
+        for (let event of title_events){
+            events.push(event)
+            event_ids.push(event.id);
+        }
     }
-    return {data, status: 200}
+    if (location){
+        for (let event of location){
+            if (!event_ids.includes(event.id)){
+                events.push(event)
+            }
+        }
+    }
+
+    if (title_events_error){
+        return {title_events_error, status: 404}
+    }
+    if (location_error){
+        return {location_error, status: 404}
+    }
+    return {data: events, status: 200}
 }
 
 export { createEvent, updateEvent, deleteEvent, getEvents, getEvent, getUserEvents, getParticipatingEvents, optIn, optOut, getEventParticipants, searchEvents }

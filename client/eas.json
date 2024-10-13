@@ -1,0 +1,40 @@
+{
+  "cli": {
+    "version": ">= 12.5.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://volunteerpioneer.onrender.com/",
+        "GOOGLE_API_KEY": "AIzaSyBU5Har5aYmd-FIABD5dC33TSmZ57td61I" 
+      },
+      "channel": "development"
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "channel": "production",
+      "ios": {
+        "simulator": true
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://volunteerpioneer.onrender.com",
+        "GOOGLE_API_KEY": "AIzaSyBU5Har5aYmd-FIABD5dC33TSmZ57td61I"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

@@ -24,12 +24,9 @@ export default function TabTwoScreen() {
 
   const search = async (userInput: string) => {
     const apiUrl = process.env.EXPO_PUBLIC_API_URL
-    const { data } = await axios.get(`${apiUrl}/events/search/event`, {
-      params: {
-        name: userInput
-      }
-    })
-    setSearched(data)
+    const { data } = await axios.get(`${apiUrl}/events/search/event?name=${userInput}`)
+    setSearched(data.data)
+    setData(data.data);
   }
 
   const getData = (async () => {
